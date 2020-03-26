@@ -1,11 +1,15 @@
+class Team:import random
+
+# Клас карта, съдържа номера на картата и боята й
 class Card:
+	#Инициализираме картата
 	def __init__(self, rank, number):
 		self.__rank = rank
-		self.__number = number	
+		self.__number = number
 	def __str__(self):
-		return f'{self.number} {self.rank}'
+		return f'{self.__number}{self.__rank}'
 	def __repr__(self):
-		return f'{self.number} {self.rank}'
+		return f'{self.__number}{self.__rank}'
 	def __eq__(self, other):
 		pass
 	def __lt__(self):
@@ -16,20 +20,31 @@ class Card:
 #class Hand:
 #	pass
 
+#Клас тесте, представлява тесте от 32 елемента на класа Карта
 class Deck:
+	#Пълним тестето с карти
 	def __init__(self):
 		ranks = ['C', 'D', 'H', 'S']
 		numbers = ['7','8','9','10','A','Q','K','A']
 		self.cards = []
 		for rank in ranks:
 			for number in numbers:
-				cards.append(Card(number = number, rank = rank))
+				self.cards.append(Card(number = number, rank = rank))
+	def __str__(self):
+		return f'{self.cards}'
 
-	def shuffle(self):
-		pass
+	#Функция, която разбърква тестето от карти
+	def shuffle_deck(self):
+		random.shuffle(self.cards)
 
-	def return_hand(self):
-		pass
+	#Функция, която раздава 8 карти, ако тестето не е празно
+	def get_hand(self):
+		if len(self.cards) > 0:
+			hand = self.cards[0:8]
+			del self.cards[0:8]
+			return hand
+		else:
+			raise Exeption('No more cards in the deck.')
 
 
 
@@ -54,5 +69,4 @@ class Round:
 
 class Game:
 	pass
-
 
