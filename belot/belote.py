@@ -85,12 +85,12 @@ class Game:
 		self.score = Score(team1, team2) #teams need to be hashable!
 		self.rounds = 0
 
-	# The entire round happens here, if makeJSON=True, create JSON on round end
+	# The entire round happens here
 	def play_round(self):
 		self.rounds += 1
 		round = Round(self.__team1, self.__team2, self.score)
 		round.start()
-		#TODO turn to json if makeJSON=True
+		#TODO make it json convertible
 
 	# Should the game continue?
 	def next_round(self):
