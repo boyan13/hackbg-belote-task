@@ -1,4 +1,4 @@
-class Team:import random
+import random
 
 # Клас карта, съдържа номера на картата и боята й
 class Card:
@@ -61,12 +61,70 @@ class Team:
 		self.player2 = player2
 
 class Round:
-	def __init__(self, rank, team1, team2):
+	def __init__(self, team1, team2, score):
 		self.deck = Deck()
-		self.rank = rank
+		self.rank = random.choice(['C', 'D', 'H', 'S', "NT", "AT"])
 		self.team1 = team1
 		self.team2 = team2
+		self.score = score
+
+	#This is where the round plays
+	def start(self):
+		pass
+
+	# Archive round to JSON
+	def to_json(self):
+		pass
 
 class Game:
-	pass
+
+	# Grab the 2 teams and init the scoreboard
+	def __init__ (self, team1, team2):
+		self.__team1 = team1
+		self.__team2 = team2
+		self.score = Score(team1, team2) #teams need to be hashable!
+		self.rounds = 0
+
+	# The entire round happens here
+	def play_round(self):
+		self.rounds += 1
+		round = Round(self.__team1, self.__team2, self.score)
+		round.start()
+		#TODO make it json convertible
+
+	# Should the game continue?
+	def next_round(self):
+		return (
+			self.rounds < 3 or 
+			not self.winner()
+		)
+
+	# Check if someone won (used in next_round())
+	def winner(self):
+		return (
+			(self.score[self.__team1] > 150 or self.score[self.__team2] > 150) and
+			(self.score[self.__team1] != self.score[self.__team2])
+			)
+
+	# Return the winner, or raise Exeption if there isn't one
+	def get_winner(self):
+		if not winner():
+			raise Exception("Nobody won yet.")
+
+		elif score[__team1] > 150:
+			return __team1
+
+		elif score[__team2] > 150:
+			return __team2
+
+class Score:
+
+	# Init scoreboard with teams as keys
+	def __init__ (self, team1, team2):
+		self.score = {team1: 0, team2 : 0}
+
+	# Direct access to the score dictionary
+	def __getitem__ (self, arg):
+		return self.score[arg]
+
 
