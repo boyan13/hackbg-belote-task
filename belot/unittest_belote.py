@@ -206,7 +206,7 @@ class TestTeam(unittest.TestCase):
 		self.assertEqual(res1, p1)
 		self.assertEqual(res2, p2)
 		self.assertEqual(res1, p1)
-	def test_chose_player(self):
+	def test_choose_player(self):
 		pass
 
 
