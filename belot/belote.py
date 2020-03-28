@@ -39,7 +39,7 @@ class Deck:
 
 	#Функция, която раздава 8 карти, ако тестето не е празно
 	def get_hand(self):
-		if len(self.cards) > 0:
+		if len(self.cards) > 0 and len(self.cards) % 8 == 0:
 			hand = self.cards[0:8]
 			del self.cards[0:8]
 			return hand
@@ -53,12 +53,39 @@ class Player:
 	def __init__(self, name, hand):
 		self.name = name
 		self.hand = hand
+	def __str__(self):
+		return f'{self.name}'
+	def __repr__(self):
+		return f'{self.name}: {self.hand}'
+	def __eq__(self, other):
+		return self.name == other.name and self.hand == other.hand
 
 class Team:
 	def __init__(self, name, player1, player2):
 		self.name = name
 		self.player1 = player1
 		self.player2 = player2
+		self.player_turn = 0
+	def __str__(self):
+		return f'{self.name}: {self.player1}, {self.player2}'
+	def __eq__(self, other):
+		return str(self) == str(other)
+	def get_player(self):
+		if self.player_turn == 0:
+			self.player_turn += 1
+			return self.player1
+		elif self.player_turn == 1:
+			self.player_turn -= 1
+			return self.player2
+		else:
+			raise Exeption("Can't reach the player.")
+
+	def chose_player(self):
+		random_num = random.random()
+		if random_num <= 0.5:
+			self.player_turn = 0
+		else:
+			self.player_turn = 1
 
 class Round:
 	def __init__(self, team1, team2, score):
