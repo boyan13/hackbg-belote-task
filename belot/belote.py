@@ -65,12 +65,12 @@ class Team:
 		self.name = name
 		self.player1 = player1
 		self.player2 = player2
-		self.player_turn = 0
+		self.player_turn = 0 #it's 0 if it's player1's turn and 1 if it's player2's turn
 	def __str__(self):
 		return f'{self.name}: {self.player1}, {self.player2}'
 	def __eq__(self, other):
 		return str(self) == str(other)
-	def get_player(self):
+	def get_player(self):#return the player whose turn is now and change the value of player_turn
 		if self.player_turn == 0:
 			self.player_turn += 1
 			return self.player1
@@ -80,7 +80,7 @@ class Team:
 		else:
 			raise Exeption("Can't reach the player.")
 
-	def chose_player(self):
+	def choose_player(self):#choosing random player who has to start the round
 		random_num = random.random()
 		if random_num <= 0.5:
 			self.player_turn = 0
