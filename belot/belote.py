@@ -1,4 +1,5 @@
 import random
+import copy
 
 # Клас карта, съдържа номера на картата и боята й
 class Card:
@@ -50,54 +51,91 @@ class Deck:
 
 		
 class Player:
-	def __init__(self, name, hand):
+	def __init__(self, name):
 		self.name = name
-		self.hand = hand
+		self.hand = []
 	def __str__(self):
 		return f'{self.name}'
 	def __repr__(self):
 		return f'{self.name}: {self.hand}'
 	def __eq__(self, other):
 		return self.name == other.name and self.hand == other.hand
+	def draw_hand(self, deck): 
+		self.hand = deck.get_hand
 
 class Team:
 	def __init__(self, name, player1, player2):
-		self.name = name
-		self.player1 = player1
-		self.player2 = player2
-		self.player_turn = 0 #it's 0 if it's player1's turn and 1 if it's player2's turn
+		self.__name = name
+		self.player1 = copy.copy(player1)
+		self.player2 = copy.copy(player2)
+		self.__player_turn = 0 #it's 0 if it's player1's turn and 1 if it's player2's turn
 	def __str__(self):
-		return f'{self.name}: {self.player1}, {self.player2}'
+		return f'{self.__name}: {self.player1}, {self.player2}'
 	def __eq__(self, other):
 		return str(self) == str(other)
+	def __hash__(self):
+		return hash(self.__name)
 	def get_player(self):#return the player whose turn is now and change the value of player_turn
-		if self.player_turn == 0:
-			self.player_turn += 1
+		if self.__player_turn == 0:
+			self.__player_turn += 1
 			return self.player1
-		elif self.player_turn == 1:
-			self.player_turn -= 1
+		elif self.__player_turn == 1:
+			self.__player_turn -= 1
 			return self.player2
 		else:
-			raise Exeption("Can't reach the player.")
+			raise Exception("Can't reach the player.")
 
 	def choose_player(self):#choosing random player who has to start the round
 		random_num = random.random()
 		if random_num <= 0.5:
-			self.player_turn = 0
+			self.__player_turn = 0
 		else:
-			self.player_turn = 1
+			self.__player_turn = 1
+
+	def swap_players(self):
+		buf = self.player1
+		self.player1 = self.player2
+		self.player2 = buf
 
 class Round:
-	def __init__(self, team1, team2, score):
+	def __init__(self, teams, score, lastGameWinner = None):
 		self.deck = Deck()
 		self.rank = random.choice(['C', 'D', 'H', 'S', "NT", "AT"])
-		self.team1 = team1
-		self.team2 = team2
+
 		self.score = score
+
+		if lastGameWinner is None:
+			self.team1 = teams[0]
+			self.team2 = teams[1]
+		else:
+			if teams[0] == lastGameWinner:
+				self.team2 = teams[1]
+			elif teams[1] == lastGameWinner:
+				self.team2 = teams[0]
+			else:
+				raise Exception("Team passed as \"Last Game's Winner\" is invalid.")
+
+			self.team1 = lastGameWinner
+			self.team1.choose_player()
 
 	#This is where the round plays
 	def start(self):
-		pass
+		self.deck.shuffle_deck()
+		team1.player1.draw_hand()
+		team1.player2.draw_hand()
+		team2.player1.draw_hand()
+		team2.player2.draw_hand()
+
+		announcements = {1 : "", 2 : "", 3 : "", 4 : ""}
+
+		for i in range(1,5):
+			if i % 2 == 1:
+				ann = team1.get_player().announce()
+			else:
+				ann = team2.get_player().announce()
+			announcements[i] = ann
+
+			self.score += score.calc_points(announcements)
 
 	# Archive round to JSON
 	def to_json(self):
@@ -107,30 +145,26 @@ class Game:
 
 	# Grab the 2 teams and init the scoreboard
 	def __init__ (self, team1, team2):
-		self.__team1 = team1
-		self.__team2 = team2
+		self.teams = [copy.deepcopy(team1), copy.deepcopy(team2)]
 		self.score = Score(team1, team2) #teams need to be hashable!
-		self.rounds = 0
+
+	def swap_team_positions(self):
+		buf = self.teams[0]
+		self.teams[0] = self.teams[1]
+		self.teams[1] = buf
 
 	# The entire round happens here
-	def play_round(self):
-		self.rounds += 1
-		round = Round(self.__team1, self.__team2, self.score)
+	def play_round(self, lastGameWinner = None):
+		round = Round(self.teams, self.score, lastGameWinner = lastGameWinner)
 		round.start()
-		#TODO make it json convertible
+		self.teams[0].swap_players()
+		self.swap_team_positions() 
 
-	# Should the game continue?
-	def next_round(self):
-		return (
-			self.rounds < 3 or 
-			not self.winner()
-		)
-
-	# Check if someone won (used in next_round())
+	# Check if someone has won
 	def winner(self):
 		return (
-			(self.score[self.__team1] > 150 or self.score[self.__team2] > 150) and
-			(self.score[self.__team1] != self.score[self.__team2])
+			(self.score[self.teams[0]] > 150 or self.score[self.teams[1]] > 150) and
+			(self.score[self.teams[0]] != self.score[self.teams[1]])
 			)
 
 	# Return the winner, or raise Exeption if there isn't one
@@ -138,11 +172,14 @@ class Game:
 		if not winner():
 			raise Exception("Nobody won yet.")
 
-		elif score[__team1] > 150:
-			return __team1
+		elif score[teams[0]] > 150 and score[teams[0]] > score[teams[1]]:
+			return teams[0]
 
-		elif score[__team2] > 150:
-			return __team2
+		elif score[teams[1]] > 150 and score[teams[1]] > score[teams[0]]:
+			return teams[1]
+
+		else:
+			raise Exception("Nobody won.")
 
 class Score:
 
@@ -153,5 +190,24 @@ class Score:
 	# Direct access to the score dictionary
 	def __getitem__ (self, arg):
 		return self.score[arg]
+
+	def __iadd__ (self, other):
+		if len(self.score) != len(other.score):
+			raise Exception("Cannot sum scores with different number of teams.")
+
+		for key in self.score.keys():
+			if key not in other.score.keys():
+				raise Exception("Scoreboard teams don't match, impossible addition.")
+
+		for key in self.score.keys():
+			self.score[key] += other.score[key]
+
+	# A method that extracts and converts announcements into points
+	# and returns a Score object to be summed with the main score 
+	@classmethod
+	def calc_points(cls, announcements):
+		pass
+
+
 
 
