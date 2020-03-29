@@ -3,55 +3,33 @@ import copy
 
 # Клас карта, съдържа номера на картата и боята й
 class Card:
-
-    ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
-    numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
+    
 
     #Инициализираме картата
     def __init__(self, rank, number):
-        self.__rank = rank
-        self.__number = number
-        #self.__card_index = card_index
+        self.__rank = str(rank)
+        self.__number = str(number)
     def __str__(self):
         return f'{self.__number}{self.__rank}'
     def __repr__(self):
         return f'{self.__number}{self.__rank}'
     def __eq__(self, other):
-        return self.__number == other.__number
+        return str(self) == str(other)
     def __lt__(self, other):
+        ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
+        numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
         if self.__rank != other.__rank:
-            return Card.ranks[self.__rank] < Card.ranks[other.__rank]
+            return ranks[self.__rank] < ranks[other.__rank]
         elif self.__number != other.__number:
-            return Card.numbers[self.__number] < Card.numbers[other.__number]
+            return numbers[self.__number] < numbers[other.__number]
         else:
             raise Exception ("Cards are equal in rank and value") 
-    def __gt__(self, other):
-        if self.__rank != other.__rank:
-            return Card.ranks[self.__rank] > Card.ranks[other.__rank]
-        elif self.__number != other.__number:
-            return Card.numbers[self.__number] > Card.numbers[other.__number]
-        else:
-            raise Exception ("Cards are equal in rank and value") 
- 
+    def __hash__(self):
+        return hash(self.__rank+self.__number)
 
-    # @classmethod
-    # def arrange_hand(self, hand):
-    #     # Insertion sort
-    #     shand = copy.deepcopy(hand)
-    #     for i in range(len(shand)):
-    #         buf = shand[i]
+    def get_number(self):
+        return self.__number
 
-    #         j = i - 1
-
-    #         while j >= 0:
-    #             if shand[j+1] > buf:
-    #                 shand[j+1] = shand[j]
-    #                 j = j - 1
-    #             else:
-    #                 shand[j+1] = buf
-    #                 break
-
-    #     return shand
 
 #class Hand:
 #   pass
@@ -90,7 +68,6 @@ class Player:
     def __init__(self, name):
         self.name = name
         self.hand = []
-        self.declare = {}
     def __str__(self):
         return f'{self.name}'
     def __repr__(self):
@@ -100,31 +77,64 @@ class Player:
     def draw_hand(self, deck): 
         self.hand = deck.get_hand()
 
-    def announce(self):
+    def declaring_hand(self):
         pass
-        
     #check if there is carre in the player hand and adds it in declare 
     def check_for_carre(self):
 
-        self.hand.sort()
+        #self.hand.sort()
+        #cards = []
+        #arr = []
+        #for i in range(len(self.hand)):
+        #    if i == 0:
+        #        arr.append([self.hand[i]])
+        #    else:
+        #        if self.hand[i] == self.hand[i-1]:
+        #            arr[-1] += [self.hand[i]]
+        #        else:
+        #            arr.append([self.hand[i]])
+        #for i in arr:
+        #    if len(i) == 4:
+        #        if (i[0]._Card__number == 'J'):
+        #            self.declare.update({'carre': 200})
+        #        if (i[0]._Card__number == '9'):
+        #            self.declare.update({'carre': 150})
+        #        if (i[0]._Card__number == '10' or i[0]._Card__number == 'Q' or i[0]._Card__number == 'K' or i[0]._Card__number == 'A'):
+        #            self.declare.update({'carre': 100})
+        #        else:
+        #            cards += i
+        #    else:
+        #        cards += i
 
-        arr = []
-        for i in range(len(self.hand)):
-            if i == 0:
-                arr.append([self.hand[i]])
-            else:
-                if self.hand[i] == self.hand[i-1]:
-                    arr[-1] += [self.hand[i]]
-                else:
-                    arr.append([self.hand[i]])
-        for i in arr:
-            if len(i) == 4:
-                if (i[0]._Card__number == 'J'):
-                    self.declare.update({'carre': 200})
-                if (i[0]._Card__number == '9'):
-                    self.declare.update({'carre': 150})
-                if (i[0]._Card__number == '10' or i[0]._Card__number == 'Q' or i[0]._Card__number == 'K' or i[0]._Card__number == 'A'):
-                    self.declare.update({'carre': 100})
+        cards = copy.deepcopy(self.hand)
+        arr_carre = []
+        to_del = []
+        numbers = {"7" : 5, "8" : 5, "9" : 0, "10" : 0, "J" : 0, "Q" : 0, "K" : 0, "A" : 0}
+        for card in self.hand:
+            numbers[card.get_number()] += 1
+
+        for key in numbers.keys():
+            if numbers[key]==4:
+                carre = ('carre', key)
+                arr_carre.append(carre)
+                for i in range(len(cards)):
+                    if cards[i].get_number() == key:
+                        to_del.append(i)
+        to_del = to_del[::-1]
+        for i in to_del:
+            del cards[i]
+        print(cards)
+
+        return (arr_carre, cards)
+
+
+
+
+        
+
+
+
+        return cards
         
 
 class Team:
