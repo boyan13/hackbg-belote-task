@@ -6,26 +6,22 @@ class TestCard(unittest.TestCase):
 		e = None
 
 		try:
-			card1 = Card(rank="C", number="7", card_index = 0)
-			card2 = Card(rank="D", number="J", card_index = 4)
-			card3 = Card(rank="H", number="K", card_index = 6)
-			card4 = Card(rank="S", number="A", card_index = 7)
+			card1 = Card(rank="C", number="7")
+			card2 = Card(rank="D", number="J")
+			card3 = Card(rank="H", number="K")
+			card4 = Card(rank="S", number="A")
 		except Exception as exc:
 			e = exc
 
 		self.assertIsNone(e)
 		self.assertEqual(card1._Card__rank, "C")
 		self.assertEqual(card1._Card__number, "7")
-		self.assertEqual(card1._Card__card_index, 0)
 		self.assertEqual(card2._Card__rank, "D")
 		self.assertEqual(card2._Card__number, "J")
-		self.assertEqual(card2._Card__card_index, 4)
 		self.assertEqual(card3._Card__rank, "H")
 		self.assertEqual(card3._Card__number, "K")
-		self.assertEqual(card3._Card__card_index, 6)
 		self.assertEqual(card4._Card__rank, "S")
 		self.assertEqual(card4._Card__number, "A")
-		self.assertEqual(card4._Card__card_index, 7)
 
 
 class TestDeck(unittest.TestCase):

@@ -3,19 +3,28 @@ import copy
 
 # Клас карта, съдържа номера на картата и боята й
 class Card:
+    
+
     #Инициализираме картата
-    def __init__(self, rank, number, card_index):
+    def __init__(self, rank, number):
         self.__rank = rank
         self.__number = number
-        self.__card_index = card_index
+        #self.__card_index = card_index
     def __str__(self):
         return f'{self.__number}{self.__rank}'
     def __repr__(self):
         return f'{self.__number}{self.__rank}'
     def __eq__(self, other):
-        return self.__card_index == other.__card_index
+        return self.__number == other.__number
     def __lt__(self, other):
-        return self.__card_index < other.__card_index
+        ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
+        numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
+        if self.__rank != other.__rank:
+            return ranks[self.__rank] < ranks[other.__rank]
+        elif self.__number != other.__number:
+            return numbers[self.__number] < numbers[other.__number]
+        else:
+            raise Exception ("Cards are equal in rank and value") 
 
 
 #class Hand:
@@ -244,7 +253,7 @@ class Score:
 
 ##############################
 def main():
-    pass
+    print(Card(rank = 'C', number = 'J') < Card(rank = 'C', number = '8'))
 
 if __name__ == '__main__':
     main()
