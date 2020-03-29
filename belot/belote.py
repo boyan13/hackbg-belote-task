@@ -4,11 +4,8 @@ import copy
 # Клас карта, съдържа номера на картата и боята й
 class Card:
     
-<<<<<<< HEAD
     ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
     numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
-=======
->>>>>>> f511a6bf37d46d68e406f556cf41cb5d87d129eb
 
     #Инициализираме картата
     def __init__(self, rank, number):
@@ -98,34 +95,11 @@ class Player:
     def draw_hand(self, deck): 
         self.hand = deck.get_hand()
 
-    def declaring_hand(self):
+    def announce(self):
         pass
+
     #check if there is carre in the player hand and adds it in declare 
     def check_for_carre(self):
-
-        #self.hand.sort()
-        #cards = []
-        #arr = []
-        #for i in range(len(self.hand)):
-        #    if i == 0:
-        #        arr.append([self.hand[i]])
-        #    else:
-        #        if self.hand[i] == self.hand[i-1]:
-        #            arr[-1] += [self.hand[i]]
-        #        else:
-        #            arr.append([self.hand[i]])
-        #for i in arr:
-        #    if len(i) == 4:
-        #        if (i[0]._Card__number == 'J'):
-        #            self.declare.update({'carre': 200})
-        #        if (i[0]._Card__number == '9'):
-        #            self.declare.update({'carre': 150})
-        #        if (i[0]._Card__number == '10' or i[0]._Card__number == 'Q' or i[0]._Card__number == 'K' or i[0]._Card__number == 'A'):
-        #            self.declare.update({'carre': 100})
-        #        else:
-        #            cards += i
-        #    else:
-        #        cards += i
 
         cards = copy.deepcopy(self.hand)
         arr_carre = []
@@ -146,17 +120,7 @@ class Player:
             del cards[i]
         print(cards)
 
-        return (arr_carre, cards)
-
-
-
-
-        
-
-
-
-        return cards
-        
+        return (arr_carre, cards)        
 
 class Team:
     def __init__(self, name, player1, player2):
