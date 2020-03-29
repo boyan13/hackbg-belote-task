@@ -98,24 +98,14 @@ class Team:
 		self.player2 = buf
 
 class Round:
-	def __init__(self, teams, score, lastGameWinner = None):
+	def __init__(self, teams, score, pickRandomFirst = False):
 		self.deck = Deck()
 		self.rank = random.choice(['C', 'D', 'H', 'S', "NT", "AT"])
-
 		self.score = score
+		self.team1 = teams[0]
+		self.team2 = teams[1]
 
-		if lastGameWinner is None:
-			self.team1 = teams[0]
-			self.team2 = teams[1]
-		else:
-			if teams[0] == lastGameWinner:
-				self.team2 = teams[1]
-			elif teams[1] == lastGameWinner:
-				self.team2 = teams[0]
-			else:
-				raise Exception("Team passed as \"Last Game's Winner\" is invalid.")
-
-			self.team1 = lastGameWinner
+		if pickRandomFirst:
 			self.team1.choose_player()
 
 	#This is where the round plays
@@ -153,9 +143,19 @@ class Game:
 		self.teams[0] = self.teams[1]
 		self.teams[1] = buf
 
-	# The entire round happens here
+	# Progresses the game
+	# If lastGameWinner is passed, a random player from that team opens the round
+	# This function takes care of team rearrangement
 	def play_round(self, lastGameWinner = None):
-		round = Round(self.teams, self.score, lastGameWinner = lastGameWinner)
+		pickRandomFirst = False
+
+		if lastGameWinner is not None:
+			pickRandomFirst = True
+			if lastGameWinner == teams[1]:
+				self.swap_team_positions()
+
+
+		round = Round(self.teams, self.score, pickRandomFirst = pickRandomFirst)
 		round.start()
 		self.teams[0].swap_players()
 		self.swap_team_positions() 
