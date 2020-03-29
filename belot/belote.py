@@ -3,7 +3,9 @@ import copy
 
 # Клас карта, съдържа номера на картата и боята й
 class Card:
-    
+
+    ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
+    numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
 
     #Инициализираме картата
     def __init__(self, rank, number):
@@ -17,15 +19,39 @@ class Card:
     def __eq__(self, other):
         return self.__number == other.__number
     def __lt__(self, other):
-        ranks = {"S" : 1, "D" : 2, "H" : 3, "C" : 4}
-        numbers = {"7" : 1, "8" : 2, "9" : 3, "10" : 4, "J" : 5, "Q" : 6, "K" : 7, "A" : 8}
         if self.__rank != other.__rank:
-            return ranks[self.__rank] < ranks[other.__rank]
+            return Card.ranks[self.__rank] < Card.ranks[other.__rank]
         elif self.__number != other.__number:
-            return numbers[self.__number] < numbers[other.__number]
+            return Card.numbers[self.__number] < Card.numbers[other.__number]
         else:
             raise Exception ("Cards are equal in rank and value") 
+    def __gt__(self, other):
+        if self.__rank != other.__rank:
+            return Card.ranks[self.__rank] > Card.ranks[other.__rank]
+        elif self.__number != other.__number:
+            return Card.numbers[self.__number] > Card.numbers[other.__number]
+        else:
+            raise Exception ("Cards are equal in rank and value") 
+ 
 
+    # @classmethod
+    # def arrange_hand(self, hand):
+    #     # Insertion sort
+    #     shand = copy.deepcopy(hand)
+    #     for i in range(len(shand)):
+    #         buf = shand[i]
+
+    #         j = i - 1
+
+    #         while j >= 0:
+    #             if shand[j+1] > buf:
+    #                 shand[j+1] = shand[j]
+    #                 j = j - 1
+    #             else:
+    #                 shand[j+1] = buf
+    #                 break
+
+    #     return shand
 
 #class Hand:
 #   pass
@@ -74,8 +100,9 @@ class Player:
     def draw_hand(self, deck): 
         self.hand = deck.get_hand()
 
-    def declaring_hand(self):
+    def announce(self):
         pass
+        
     #check if there is carre in the player hand and adds it in declare 
     def check_for_carre(self):
 
