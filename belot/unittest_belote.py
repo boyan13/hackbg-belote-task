@@ -152,9 +152,30 @@ class TestPlayer(unittest.TestCase):
 		self.assertEqual(carre, [('carre', 'K')])
 		self.assertEqual(hand, ['7H', 'QH', 'QD', 'JH'])
 
-		
+	def test_check_for_consecutive(self):
+		e = None
 
+		p = Player(name="Ao")
+		p.hand = [
+		Card(rank='S', number='8'),
+		Card(rank='S', number='7'),
+		Card(rank='S', number='9'),
+		Card(rank='S', number='Q'),
+		Card(rank='C', number='J'),
+		Card(rank='S', number='A'),
+		Card(rank='S', number='K'),
+		Card(rank='S', number='10')
+		]
+		cards = p.hand
+		expected = [("quarte", "S", "7"),("tierce", "S", "Q")]
 
+		try:
+			result = p.check_for_consecutive(cards, "S")
+		except Exception as exc:
+			e = exc
+
+		self.assertIsNone(e)
+		self.assertEqual(result, expected)
 
 class TestTeam(unittest.TestCase):
 	
