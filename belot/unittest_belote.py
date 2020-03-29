@@ -48,7 +48,7 @@ class TestCard(unittest.TestCase):
 		self.assertFalse(card2 > card3)
 		self.assertTrue(card2 > card4)
 		self.assertTrue(card3 > card4)
-		
+
 class TestDeck(unittest.TestCase):
 	def test_init_dunder(self):
 		deck = Deck()
