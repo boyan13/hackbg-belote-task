@@ -38,10 +38,8 @@ class Deck:
         numbers = ['7','8','9','10','A','Q','K','A']
         self.cards = []
         for rank in ranks:
-            i = 0
             for number in numbers:
-                self.cards.append(Card(number = number, rank = rank, card_index = i))
-                i += 1
+                self.cards.append(Card(number = number, rank = rank))
 
     def __str__(self):
         return f'{self.cards}'
@@ -94,11 +92,11 @@ class Player:
                     arr.append([self.hand[i]])
         for i in arr:
             if len(i) == 4:
-                if (i[0]._Card__card_index == 4):
+                if (i[0]._Card__number == 'J'):
                     self.declare.update({'carre': 200})
-                if (i[0]._Card__card_index == 2):
+                if (i[0]._Card__number == '9'):
                     self.declare.update({'carre': 150})
-                if (i[0]._Card__card_index == 3 or i[0]._Card__card_index == 5 or i[0]._Card__card_index == 6 or i[0]._Card__card_index == 7):
+                if (i[0]._Card__number == '10' or i[0]._Card__number == 'Q' or i[0]._Card__number == 'K' or i[0]._Card__number == 'A'):
                     self.declare.update({'carre': 100})
         
 

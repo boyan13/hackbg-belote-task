@@ -113,18 +113,18 @@ class TestPlayer(unittest.TestCase):
 		self.assertFalse(p3 == p4)
 		self.assertFalse(p1 == p4)
 
-	def test_carre(self):
-		p = Player(name = 'Lin')
-		p.hand = [Card(rank="H", number="K", card_index = 6),\
-		Card(rank="D", number="K", card_index = 6),\
-		Card(rank="S", number="K", card_index = 6),\
-		Card(rank="C", number="K", card_index = 6),\
-		Card(rank="H", number="7", card_index = 0),\
-		Card(rank="H", number="Q", card_index = 5),\
-		Card(rank="D", number="Q", card_index = 5),\
-		Card(rank="H", number="J", card_index = 4)]
-		p.check_for_carre()
-		self.assertEqual(p.declare, {'carre': 100})
+	#def test_carre(self):
+	#	p = Player(name = 'Lin')
+	#	p.hand = [Card(rank="H", number="K", card_index = 6),\
+	#	Card(rank="D", number="K", card_index = 6),\
+	#	Card(rank="S", number="K", card_index = 6),\
+	#	Card(rank="C", number="K", card_index = 6),\
+	#	Card(rank="H", number="7", card_index = 0),\
+	#	Card(rank="H", number="Q", card_index = 5),\
+	#	Card(rank="D", number="Q", card_index = 5),\
+	#	Card(rank="H", number="J", card_index = 4)]
+	#	p.check_for_carre()
+	#	self.assertEqual(p.declare, {'carre': 100})
 
 		
 
