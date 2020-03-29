@@ -6,22 +6,27 @@ class TestCard(unittest.TestCase):
 		e = None
 
 		try:
-			card1 = Card(rank="C", number="7")
-			card2 = Card(rank="D", number="J")
-			card3 = Card(rank="H", number="K")
-			card4 = Card(rank="S", number="A")
+			card1 = Card(rank="C", number="7", card_index = 0)
+			card2 = Card(rank="D", number="J", card_index = 4)
+			card3 = Card(rank="H", number="K", card_index = 6)
+			card4 = Card(rank="S", number="A", card_index = 7)
 		except Exception as exc:
 			e = exc
 
 		self.assertIsNone(e)
 		self.assertEqual(card1._Card__rank, "C")
-		self.assertEqual(card1._Card__number, "7")				
+		self.assertEqual(card1._Card__number, "7")
+		self.assertEqual(card1._Card__card_index, 0)
 		self.assertEqual(card2._Card__rank, "D")
 		self.assertEqual(card2._Card__number, "J")
+		self.assertEqual(card2._Card__card_index, 4)
 		self.assertEqual(card3._Card__rank, "H")
 		self.assertEqual(card3._Card__number, "K")
+		self.assertEqual(card3._Card__card_index, 6)
 		self.assertEqual(card4._Card__rank, "S")
 		self.assertEqual(card4._Card__number, "A")
+		self.assertEqual(card4._Card__card_index, 7)
+
 
 class TestDeck(unittest.TestCase):
 	def test_init_dunder(self):
@@ -111,6 +116,19 @@ class TestPlayer(unittest.TestCase):
 		self.assertTrue(p2 == p2twin)
 		self.assertFalse(p3 == p4)
 		self.assertFalse(p1 == p4)
+
+	def test_carre(self):
+		p = Player(name = 'Lin')
+		p.hand = [Card(rank="H", number="K", card_index = 6),\
+		Card(rank="D", number="K", card_index = 6),\
+		Card(rank="S", number="K", card_index = 6),\
+		Card(rank="C", number="K", card_index = 6),\
+		Card(rank="H", number="7", card_index = 0),\
+		Card(rank="H", number="Q", card_index = 5),\
+		Card(rank="D", number="Q", card_index = 5),\
+		Card(rank="H", number="J", card_index = 4)]
+		p.check_for_carre()
+		self.assertEqual(p.declare, {'carre': 100})
 
 		
 
