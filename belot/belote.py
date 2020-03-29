@@ -30,6 +30,9 @@ class Card:
     def get_number(self):
         return self.__number
 
+    def get_rank(self):
+        return self.__rank
+
   # @classmethod
 # def arrange_hand(self, hand):
 #     # Insertion sort
@@ -118,9 +121,73 @@ class Player:
         to_del = to_del[::-1]
         for i in to_del:
             del cards[i]
-        print(cards)
 
-        return (arr_carre, cards)        
+        return (arr_carre, cards)
+
+    def check_for_consecutive(self, cards, rank):
+
+        # Storage for all found sequences
+        arr_consecutives = []
+
+        # Determine valid rank for comparison
+        if rank == "NT":
+            return list()
+        elif rank == "AT":
+            validrank = ["S", "H", "D", "C"]
+        else:
+            validrank = rank
+
+        # Use vlist as indexation for values.keys()
+        values = {"7" : 0, "8" : 0, "9" : 0, "10" : 0, "J" : 0, "Q" : 0, "K" : 0, "A" : 0}
+        vlist = ["7", "8", "9", "10", "J", "Q", "K", "A"]
+
+        # Make a histogram of all ocurances that match the valid rank
+        for card in cards:
+            crank = card.get_rank()
+            if crank in validrank:
+                values[card.get_number()] += 1
+
+        # Iterate the dictionary (histogram) and extract all sequences without overlap
+        # The histogram accounts for the need for the cards to be sorted
+        i = 0
+        while i <= 5:
+            ikey = vlist[i]
+            jkey = vlist[i+1]
+            wkey = vlist[i+2]  
+            if values[ikey] > 0 and values[jkey] > 0 and values[wkey] > 0: #Check for TIERCE
+
+                if i <= 4: # If not end of hand
+                    pkey = vlist[i+3]
+                    if values[pkey] > 0: # Check for QUARTE
+
+                        if i <= 3: # If not end of hand
+                            qkey = vlist[i+4]
+                            if values[qkey] > 0: # Check for QUINTE
+
+                                # Extract QUINTE and shift i forward
+                                arr_consecutives.append(("quinte", crank, ikey))
+                                i += 5
+
+                            else: # Extract QUARTE and shift i forward
+                                arr_consecutives.append(("quarte", crank, ikey))
+                                i += 4
+
+                        else: # Extract QUARTE and shift i forward
+                            arr_consecutives.append(("quarte", crank, ikey))
+                            i += 4
+
+                    else: # Extract TIERCE and shift i forward
+                        arr_consecutives.append(("tierce", crank, ikey))
+                        i += 3
+
+                else: # Extract TIERCE and shift i forward
+                     arr_consecutives.append(("tierce", crank, ikey))
+                     i += 3
+            else:
+                i += 1
+                       
+        # return all found sequences as list 
+        return arr_consecutives          
 
 class Team:
     def __init__(self, name, player1, player2):
