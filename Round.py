@@ -18,21 +18,26 @@ class Round:
     #This is where the round plays
     def start(self):
         self.deck.shuffle_deck()
-        team1.player1.draw_hand()
-        team1.player2.draw_hand()
-        team2.player1.draw_hand()
-        team2.player2.draw_hand()
+        self.team1.player1.draw_hand()
+        self.team1.player2.draw_hand()
+        self.team2.player1.draw_hand()
+        self.team2.player2.draw_hand()
 
         announcements = {1 : "", 2 : "", 3 : "", 4 : ""}
 
-        for i in range(1,5):
-            if i % 2 == 1:
-                ann = team1.get_player().announce()
-            else:
-                ann = team2.get_player().announce()
-            announcements[i] = ann
+        #if rank is "NT" makes the score 0
+        if self.rank == "NT":
+            self.score = Score(self.team1, self.team2)
 
-            self.score += score.calc_points(announcements)
+        else:
+            for i in range(1,5):
+                if i % 2 == 1:
+                    ann = team1.get_player().announce(self.rank)
+                else:
+                    ann = team2.get_player().announce(self.rank)
+                announcements[i] = ann
+
+                self.score += Score.calc_points(announcements)
 
     # Archive round to JSON
     def to_json(self):

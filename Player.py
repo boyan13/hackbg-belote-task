@@ -16,8 +16,13 @@ class Player:
     def draw_hand(self, deck): 
         self.hand = deck.get_hand()
 
-    def announce(self):
-        pass
+    def announce(self, rank):
+        announcement, cards = self.check_for_carre()
+        if len(cards) > 0:
+            consecutives = self.check_for_consecutive(cards = cards, rank = rank)
+            belote = self.check_for_belote(rank)
+            announcement = announcement + consecutives + belote
+        return announcement
 
     #check if there is carre in the player hand and adds it in declare 
     def check_for_carre(self):
