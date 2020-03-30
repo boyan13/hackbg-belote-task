@@ -1,7 +1,7 @@
 import unittest
-from Player import Player
+from Game import Belote
 
-class testPlayer(unittest.TestCase):
+class test_Game(unittest.TestCase)
     pass
 
 if __name__ == '__main__':
