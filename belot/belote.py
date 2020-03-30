@@ -33,7 +33,12 @@ class Card:
     def get_rank(self):
         return self.__rank
 
-  # @classmethod
+    #Check if the rank of two cards is the same
+    @classmethod
+    def equal_rank(cls, card1, card2):
+        return card1.__rank == card2.__rank
+
+# @classmethod
 # def arrange_hand(self, hand):
 #     # Insertion sort
 #     shand = copy.deepcopy(hand)
@@ -51,9 +56,6 @@ class Card:
 #                 break
 
 #     return shand
-
-#class Hand:
-#   pass
 
 #Клас тесте, представлява тесте от 32 елемента на класа Карта
 class Deck:
@@ -81,10 +83,7 @@ class Deck:
             return hand
         else:
             raise Exeption('No more cards in the deck.')
-
-
-
-        
+    
 class Player:
     def __init__(self, name):
         self.name = name
@@ -103,14 +102,17 @@ class Player:
 
     #check if there is carre in the player hand and adds it in declare 
     def check_for_carre(self):
-
+        #makes a copy of hand
         cards = copy.deepcopy(self.hand)
+        #list for all carres
         arr_carre = []
+        #indexes of all elements in carre
         to_del = []
+        #check if there is a carre
         numbers = {"7" : 5, "8" : 5, "9" : 0, "10" : 0, "J" : 0, "Q" : 0, "K" : 0, "A" : 0}
         for card in self.hand:
             numbers[card.get_number()] += 1
-
+        #if the player has carre it's added to the arr_carre and removed from the card list
         for key in numbers.keys():
             if numbers[key]==4:
                 carre = ('carre', key)
@@ -121,7 +123,7 @@ class Player:
         to_del = to_del[::-1]
         for i in to_del:
             del cards[i]
-
+        #returns all caress and a list of the rest of the cards
         return (arr_carre, cards)
 
     def check_for_consecutive(self, cards, rank):
@@ -187,7 +189,30 @@ class Player:
                 i += 1
                        
         # return all found sequences as list 
-        return arr_consecutives          
+        return arr_consecutives
+
+    #check if there is belote in the player hand and adds it in declare
+    def check_for_belote(self, rank):
+        self.hand.sort()
+        belote_arr = []
+
+        if rank == "NT":
+            return list()
+
+        for i in range(len(self.hand)-1):
+            if self.hand[i]._Card__number == 'Q':
+                if self.hand[i+1]._Card__number == 'K':
+                    if Card.equal_rank(self.hand[i],self.hand[i+1]):
+                        belote_arr.append(('belote', self.hand[i]._Card__rank))
+
+
+        if rank == "AT":
+            #returns a list of tuples -> tuple('belote', rank)
+            return belote_arr 
+        if ('belote', rank) in belote_arr:
+            #returna list of tuple('belote', rank)
+            return [('belote', rank)]
+        return list()      
 
 class Team:
     def __init__(self, name, player1, player2):
@@ -333,14 +358,3 @@ class Score:
     @classmethod
     def calc_points(cls, announcements):
         pass
-
-
-
-
-
-##############################
-def main():
-    print(Card(rank = 'C', number = 'J') < Card(rank = 'C', number = '8'))
-
-if __name__ == '__main__':
-    main()
