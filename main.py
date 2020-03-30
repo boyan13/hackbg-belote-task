@@ -1,4 +1,10 @@
-from belote import Card, Deck, Player, Team, Round, Game, Score
+from Card import Card
+from Deck import Deck
+from Player import Player
+from Team import Team
+from Round import Round
+from Game import Game
+from Score import Score
 
 def main():
 	# Extract data from user to initialize Player and Team objects
