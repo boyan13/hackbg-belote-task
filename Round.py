@@ -27,7 +27,7 @@ class Round:
 
         #if rank is "NT" makes the score 0
         if self.rank == "NT":
-            self.score = Score(self.team1, self.team2)
+            self.score += Score(self.team1, self.team2)
 
         else:
             for i in range(1,5):
