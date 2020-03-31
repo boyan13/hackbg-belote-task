@@ -1,8 +1,8 @@
 class Player:
     def __init__(self, name):
         self.name = name #My name
-        self.team #Name of the team I am part of
-        self.hand
+        self.team = 'team'#Name of the team I am part of
+        self.hand = []
         self.hand_histogram = [
         {7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0, 14 : 0}, # Spades at index 0 because their priority is 0 (lowest)
         {7 : 0, 8 : 0, 9 : 0, 10 : 0, 11 : 0, 12 : 0, 13 : 0, 14 : 0}, # Diamonds at index 1 because their priority is 1
@@ -32,6 +32,7 @@ class Player:
         carre = 0;
         for card in self.hand:
             value = card["value"]
+            carre = 0
             if value == 7 or value == 8:
                 continue
 
@@ -40,11 +41,10 @@ class Player:
                     carre += 1;
                 else: 
                     break
-            if carre == 4:
-                for rank in [0, 1, 2 ,3]:
-                    self.hand_histogram[rank][value] = 0 
-                carres.append( ("carre", value) )
-        
+                if carre == 4:
+                    for rank in [0, 1, 2 ,3]:
+                        self.hand_histogram[rank][value] = 0 
+                    carres.append( ("carre", value) )
         return carres
 
     def get_quintas(self, rank):
@@ -61,33 +61,39 @@ class Player:
 
     def get_belotes(self, rank):
         # check in hand not hand_histogram!!
-        pass
+        self.hand = sorted(self.hand, key=lambda k: k['value'])
+        self.hand = sorted(self.hand, key=lambda k: k['rank'])
+        belote_arr = []
 
-    def check_for_carre(self):
-        # #makes a copy of hand
-        # cards = copy.deepcopy(self.hand)
-        # #list for all carres
-        # arr_carre = []
-        # #indexes of all elements in carre
-        # to_del = []
-        # #check if there is a carre
-        # numbers = {"7" : 5, "8" : 5, "9" : 0, "10" : 0, "J" : 0, "Q" : 0, "K" : 0, "A" : 0}
-        # for card in self.hand:
-        #   numbers[card.get_number()] += 1
-        # #if the player has carre it's added to the arr_carre and removed from the card list
-        # for key in numbers.keys():
-        #     if numbers[key]==4:
-        #         carre = ('carre', key)
-        #         arr_carre.append(carre)
-        #         for i in range(len(cards)):
-        #             if cards[i].get_number() == key:
-        #                 to_del.append(i)
-        # to_del = to_del[::-1]
-        # for i in to_del:
-        #     del cards[i]
-        # #returns all caress and a list of the rest of the cards
-        # return (arr_carre, cards)
-        pass
+
+        if rank == "No Trumps":
+            return belote_arr
+
+        for i in range(len(self.hand)-1):
+            if self.hand[i]['value'] == 12:
+                if self.hand[i+1]['value']== 13:
+                    if self.hand[i]['rank'] == self.hand[i+1]['rank']:
+                        belote_arr.append(('belote', self.hand[i]['rank']))
+
+
+        if rank == "All Trumps":
+            #returns a list of tuples -> tuple('belote', rank)
+            return belote_arr 
+        else:
+            if rank == "Spades":
+                rank = 0
+            elif rank == "Diamonds":
+                rank = 1
+            elif rank == "Hearts":
+                rank = 2
+            else:
+                rank = 3
+        if ('belote', rank) in belote_arr:
+            #returna list of tuple('belote', rank)
+            return [('belote', rank)]
+        return belote_arr
+        
+
 
     def check_for_consecutive(self, cards, rank):
         # # Storage for all found sequences
